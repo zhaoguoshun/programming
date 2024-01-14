@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanou.project.system.mapper.TbSensitiveMapper">
+
+    <resultMap type="TbSensitive" id="TbSensitiveResult">
+        <result property="id"    column="id"    />
+        <result property="word"    column="word"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectTbSensitiveVo">
+        select id, word, create_time from tb_sensitive
+    </sql>
+
+    <select id="selectTbSensitiveList" parameterType="TbSensitive" resultMap="TbSensitiveResult">
+        <include refid="selectTbSensitiveVo"/>
+        <where>
+            <if test="word != null  and word != ''"> and word = #{word}</if>
+        </where>
+    </select>
+
+    <select id="selectTbSensitiveById" parameterType="Long" resultMap="TbSensitiveResult">
+        <include refid="selectTbSensitiveVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTbSensitive" parameterType="TbSensitive" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_sensitive
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="word != null">word,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="word != null">#{word},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTbSensitive" parameterType="TbSensitive">
+        update tb_sensitive
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="word != null">word = #{word},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbSensitiveById" parameterType="Long">
+        delete from tb_sensitive where id = #{id}
+    </delete>
+
+    <delete id="deleteTbSensitiveByIds" parameterType="String">
+        delete from tb_sensitive where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

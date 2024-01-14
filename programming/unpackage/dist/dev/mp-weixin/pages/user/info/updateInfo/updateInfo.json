@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "tui-button": "/node-modules/thorui-uni/lib/thorui/tui-button/tui-button",
+    "tui-toast": "/node-modules/thorui-uni/lib/thorui/tui-toast/tui-toast"
+  }
+}

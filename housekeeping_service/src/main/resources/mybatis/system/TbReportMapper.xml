@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanou.project.system.mapper.TbReportMapper">
+
+    <resultMap type="TbReport" id="TbReportResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="contentText"    column="content_text"    />
+        <result property="userId"    column="user_id"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectTbReportVo">
+        select r.id, r.title, r.content_text, r.user_id, r.create_time,u.nick_name
+        from tb_report r
+left join sys_user u on r.user_id = u.user_id
+    </sql>
+
+    <select id="selectTbReportList" parameterType="TbReport" resultMap="TbReportResult">
+        <include refid="selectTbReportVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="contentText != null  and contentText != ''"> and content_text = #{contentText}</if>
+            <if test="userId != null "> and r.user_id = #{userId}</if>
+        </where>
+    </select>
+
+    <select id="selectTbReportById" parameterType="Long" resultMap="TbReportResult">
+        <include refid="selectTbReportVo"/>
+        where r.id = #{id}
+    </select>
+
+    <insert id="insertTbReport" parameterType="TbReport" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="contentText != null">content_text,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="contentText != null">#{contentText},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTbReport" parameterType="TbReport">
+        update tb_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="contentText != null">content_text = #{contentText},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbReportById" parameterType="Long">
+        delete from tb_report where id = #{id}
+    </delete>
+
+    <delete id="deleteTbReportByIds" parameterType="String">
+        delete from tb_report where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
